@@ -39,6 +39,7 @@ RUN \
 	gzip \
 	logrotate \
 	nginx \
+	nano \
 	php7 \
 	php7-cgi \
 	php7-fpm \
@@ -60,6 +61,9 @@ RUN \
  curl -o \
  /tmp/rutorrent.tar.gz -L \
 	"https://github.com/Novik/ruTorrent/archive/master.tar.gz" && \
+ curl -o \
+ /tmp/rutorrent-materialdesign.tar.gz -L \
+	"https://github.com/Phlooo/ruTorrent-MaterialDesign/archive/master.zip" && \
  tar xf \
  /tmp/rutorrent.tar.gz -C \
 	/usr/share/webapps/rutorrent --strip-components=1 && \
@@ -67,6 +71,10 @@ RUN \
 	/defaults/rutorrent-conf/ && \
  rm -rf \
 	/defaults/rutorrent-conf/users && \
+/tmp/rutorrent-materialdesign.tar.gz -C \
+	/usr/share/webapps/rutorrent/plugins/theme/themes/MaterialDesign --strip-components=1 && \
+/tmp/rutorrent-materialdesign.tar.gz -C \	
+	/var/www/rutorrent/plugins/theme/themes/MaterialDesign --strip-components=1 && \
 
 # patch snoopy.inc for rss fix
  cd /usr/share/webapps/rutorrent/php && \
