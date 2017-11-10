@@ -44,6 +44,9 @@ RUN \
  curl -o \
  /tmp/rutorrent.tar.gz -L \
 	"https://github.com/Novik/ruTorrent/archive/master.tar.gz" && \
+ curl -o \		
+ /tmp/rutorrent-materialdesign.tar.gz -L \		
+ 	"https://github.com/Phlooo/ruTorrent-MaterialDesign/archive/master.zip" && \	
  tar xf \
  /tmp/rutorrent.tar.gz -C \
 	/usr/share/webapps/rutorrent --strip-components=1 && \
