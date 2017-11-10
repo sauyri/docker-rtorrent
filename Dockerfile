@@ -17,6 +17,7 @@ RUN \
 	fcgi \
 	ffmpeg \
 	geoip \
+	git \
 	gzip \
 	logrotate \
 	nginx \
