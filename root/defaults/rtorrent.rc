@@ -4,26 +4,91 @@ network.scgi.open_local = /run/php/.rtorrent.sock
 schedule = socket_chmod,0,0,"execute=chmod,0660,/run/php/.rtorrent.sock"
 schedule = socket_chgrp,0,0,"execute=chgrp,abc,/run/php/.rtorrent.sock"
 log.open_file = "rtorrent", /config/log/rtorrent/rtorrent.log
+log.open_file = "tracker", /config/log/rtorrent/tracker.log
+log.open_file = "debug", /config/log/rtorrent/debug.log
 log.add_output = "info", "rtorrent"
-min_peers = 40
-max_peers = 1200
-max_uploads = 15
-download_rate = 10000
+log.add_output = "dht_debug", "tracker"
+log.add_output = "tracker_debug", "tracker"
+log.add_output = "debug", "debug"
+download_rate = 5000
 upload_rate = 5000
+
+# Enable the default ratio group.
+ratio.enable=
+
+# Change the limits, the defaults should be sufficient.
+# Upload to a minimum ratio of 1.0
+ratio.min.set=100
+# Upload to a maximum ratio of 3.0
+ratio.max.set=300
+# Upload a minimum of 250 MB
+ratio.upload.set=1000M
+
+# When seeding ratio is reached close the torrent
+system.method.set = group.seeding.ratio.command, d.close=
+
 # schedule = watch_directory_1,5,5,"load.start=/downloads/watched/*.torrent"
+schedule = watch_directory_1,5,5,"load.start=/watch/anime/*.torrent,d.set_custom1=Anime"
+schedule = watch_directory_2,5,5,"load.start=/watch/games/pc/*.torrent,d.set_custom1=Games/PC"
+schedule = watch_directory_3,5,5,"load.start=/watch/games/ps3/*.torrent,d.set_custom1=Games/PS3"
+schedule = watch_directory_4,5,5,"load.start=/watch/hentai/*.torrent,d.set_custom1=Hentai"
+schedule = watch_directory_5,5,5,"load.start=/watch/manga/*.torrent,d.set_custom1=Manga"
+schedule = watch_directory_6,5,5,"load.start=/watch/misc/*.torrent,d.set_custom1=Misc"
+schedule = watch_directory_7,5,5,"load.start=/watch/movies/*.torrent,d.set_custom1=Movies"
+schedule = watch_directory_8,5,5,"load.start=/watch/music/*.torrent,d.set_custom1=Music"
+schedule = watch_directory_9,5,5,"load.start=/watch/porn/xxx-eng/*.torrent,d.set_custom1=Porn/xxx-eng"
+schedule = watch_directory_10,5,5,"load.start=/watch/porn/xxx-jav/*.torrent,d.set_custom1=Porn/xxx-jav"
+schedule = watch_directory_11,5,5,"load.start=/watch/porn/xxx-ger/*.torrent,d.set_custom1=Porn/xxx-ger"
+schedule = watch_directory_12,5,5,"load.start=/watch/porn/xxx-ran/*.torrent,d.set_custom1=Porn/xxx-ran"
+schedule = watch_directory_13,5,5,"load.start=/watch/porn/xxx-vr/*.torrent,d.set_custom1=Porn/xxx-vr"
+schedule = watch_directory_14,5,5,"load.start=/watch/tv/*.torrent,d.set_custom1=Tv"
+schedule = tied_directory, 10, 10, start_tied=
+schedule = untied_directory, 10, 10, stop_untied=
+
 directory = /downloads/incoming
 session = /config/rtorrent/rtorrent_sess
-schedule = low_diskspace,5,60,close_low_diskspace=100M
+
 # ip = 178.32.28.51
 bind = 0.0.0.0
-port_range = 51413-51413
+
+# Listening port for incoming peer traffic (fixed; you can also randomize it)
+network.port_range.set = 49160-49160
+network.port_random.set = no
+
 check_hash = yes
 use_udp_trackers = yes
-encryption = allow_incoming,try_outgoing,enable_retry
-dht = auto
-dht_port = 6881
-peer_exchange = yes
-# network.http.ssl_verify_peer.set=0
-# scgi_port = 0.0.0.0:5000
-encoding_list = UTF-8
-# system.umask.set = 022
+
+# Peer settings
+throttle.max_uploads.set = 100
+throttle.max_uploads.global.set = 250
+
+throttle.min_peers.normal.set = 20
+throttle.max_peers.normal.set = 60
+throttle.min_peers.seed.set = 30
+throttle.max_peers.seed.set = 80
+trackers.numwant.set = 80
+
+protocol.encryption.set = allow_incoming,try_outgoing,enable_retry
+
+# Limits for file handle resources, this is optimized for
+# an `ulimit` of 1024 (a common default). You MUST leave
+# a ceiling of handles reserved for rTorrent's internal needs!
+network.http.max_open.set = 50
+network.max_open_files.set = 600
+network.max_open_sockets.set = 300
+
+# Memory resource usage (increase if you have a large number of items loaded,
+# and/or the available resources to spend)
+pieces.memory.max.set = 1800M
+network.xmlrpc.size_limit.set = 4M
+
+dht = off
+dht_port = 9881
+peer_exchange = no
+
+# Other operational settings (check & adapt)
+encoding.add = utf8
+network.http.dns_cache_timeout.set = 25
+
+##view.sort_current = seeding, greater=d.ratio=
+schedule2 = monitor_diskspace, 15, 60, ((close_low_diskspace, 1000M))
