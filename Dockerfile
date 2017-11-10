@@ -54,8 +54,10 @@ RUN \
 	/defaults/rutorrent-conf/ && \
  rm -rf \
 	/defaults/rutorrent-conf/users && \
+ tar xf \
  /tmp/rutorrent-materialdesign.tar.gz -C \
 	/usr/share/webapps/rutorrent/plugins/theme/themes/MaterialDesign --strip-components=1 && \
+ tar xf \
  /tmp/rutorrent-materialdesign.tar.gz -C \	
 	/var/www/rutorrent/plugins/theme/themes/MaterialDesign --strip-components=1 && \
 
