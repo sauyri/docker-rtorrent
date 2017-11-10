@@ -49,10 +49,12 @@ RUN \
  tar xf \
  /tmp/rutorrent.tar.gz -C \
 	/usr/share/webapps/rutorrent --strip-components=1 && \
-
+ 
+ mkdir /var/www/rutorrent/plugins/theme/themes && \
  cd /var/www/rutorrent/plugins/theme/themes && \
  git clone git://github.com/phlooo/ruTorrent-MaterialDesign.git MaterialDesign && \
  
+ mkdir /usr/share/webapps/rutorrent/plugins/theme/themes && \
  cd /usr/share/webapps/rutorrent/plugins/theme/themes && \
  git clone git://github.com/phlooo/ruTorrent-MaterialDesign.git MaterialDesign && \
 
