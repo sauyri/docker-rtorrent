@@ -44,18 +44,17 @@ RUN \
  curl -o \
  /tmp/rutorrent.tar.gz -L \
 	"https://github.com/Novik/ruTorrent/archive/master.tar.gz" && \
- curl -o \		
- /tmp/rutorrent-materialdesign.tar.gz -L \		
- 	"https://github.com/Phlooo/ruTorrent-MaterialDesign/archive/master.zip" && \	
+
  tar xf \
  /tmp/rutorrent.tar.gz -C \
 	/usr/share/webapps/rutorrent --strip-components=1 && \
- tar xf \		
- /tmp/rutorrent-materialdesign.tar.gz -C \		
- 	/usr/share/webapps/rutorrent/plugins/theme/themes/MaterialDesign --strip-components=1 && \		
- tar xf \		
- /tmp/rutorrent-materialdesign.tar.gz -C \			
- 	/var/www/rutorrent/plugins/theme/themes/MaterialDesign --strip-components=1 && \
+
+ cd /var/www/rutorrent/plugins/theme/themes && \
+ git clone git://github.com/phlooo/ruTorrent-MaterialDesign.git MaterialDesign && \
+ 
+ cd /usr/share/webapps/rutorrent/plugins/theme/themes && \
+ git clone git://github.com/phlooo/ruTorrent-MaterialDesign.git MaterialDesign && \
+
  mv /usr/share/webapps/rutorrent/conf/* \
 	/defaults/rutorrent-conf/ && \
  rm -rf \
