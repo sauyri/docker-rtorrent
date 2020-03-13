@@ -63,11 +63,6 @@ RUN \echo "**** install build packages ****" && \
  cd /app/rutorrent/plugins/theme/themes && \
  git clone git://github.com/phlooo/ruTorrent-MaterialDesign.git MaterialDesign && \
 
- mv /apps/rutorrent/conf/* \
-	/defaults/rutorrent-conf/ && \
- rm -rf \
-	/defaults/rutorrent-conf/users && \
-
  echo "**** patch snoopy.inc for rss fix ****" && \
  cd /app/rutorrent/php && \
  patch < /defaults/patches/snoopy.patch && \
