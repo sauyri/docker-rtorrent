@@ -45,13 +45,13 @@ RUN \echo "**** install build packages ****" && \
 	cloudscraper && \
 
  echo "**** install rutorrent ****" && \
- if [ -z ${RUTORRENT_RELEASE+x} ]; then \
-	RUTORRENT_RELEASE=$(curl -sX GET "https://api.github.com/repos/Novik/ruTorrent/releases/latest" \
-	| awk '/tag_name/{print $4;exit}' FS='[""]'); \
- fi && \
+ //if [ -z ${RUTORRENT_RELEASE+x} ]; then \
+//	RUTORRENT_RELEASE=$(curl -sX GET "https://api.github.com/repos/Novik/ruTorrent/releases/latest" \
+//	| awk '/tag_name/{print $4;exit}' FS='[""]'); \
+ //fi && \
  curl -o \
  /tmp/rutorrent.tar.gz -L \
-	"https://github.com/Novik/rutorrent/archive/${RUTORRENT_RELEASE}.tar.gz" && \
+	"https://github.com/Novik/rutorrent/archive/v3.9.tar.gz" && \
  mkdir -p \
 	/app/rutorrent \
 	/defaults/rutorrent-conf && \
@@ -67,7 +67,7 @@ RUN \echo "**** install build packages ****" && \
  cd /app/rutorrent/plugins/theme/themes && \
  git clone git://github.com/phlooo/ruTorrent-MaterialDesign.git MaterialDesign && \
 
- mv /usr/share/webapps/rutorrent/conf/* \
+ mv /apps/rutorrent/conf/* \
 	/defaults/rutorrent-conf/ && \
  rm -rf \
 	/defaults/rutorrent-conf/users && \
