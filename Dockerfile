@@ -30,6 +30,9 @@ RUN \echo "**** install build packages ****" && \
 	php7 \
 	php7-cgi \
 	php7-curl \
+	php7-fpm \
+	php7-json  \
+	php7-mbstring \
 	php7-pear \
 	php7-zip \
 	procps \
@@ -38,6 +41,8 @@ RUN \echo "**** install build packages ****" && \
 	screen \
 	sox \
 	unrar \
+	unzip \
+	wget \
 	zip && \
  echo "**** install pip packages ****" && \
  pip3 install --no-cache-dir -U \
