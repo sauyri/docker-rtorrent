@@ -1,54 +1,67 @@
-FROM lsiobase/alpine:3.6
-MAINTAINER sparklyballs
+FROM lsiobase/nginx:3.10
 
 # set version label
 ARG BUILD_DATE
 ARG VERSION
+ARG RUTORRENT_RELEASE
 LABEL build_version="Linuxserver.io version:- ${VERSION} Build-date:- ${BUILD_DATE}"
 
 # copy patches
 COPY patches/ /defaults/patches/
 
 # install packages
-RUN \
- apk add --no-cache \
-	ca-certificates \
+RUN \echo "**** install build packages ****" && \
+ apk add --no-cache --virtual=build-dependencies \
+	g++ \
+	libffi-dev \
+	openssl-dev \
+	python3-dev && \
+ echo "**** install runtime packages ****" && \
+ apk add --no-cache --upgrade \
+	bind-tools \
 	curl \
 	fcgi \
 	ffmpeg \
 	geoip \
-	git \
 	gzip \
-	logrotate \
-	nginx \
+	libffi \
+	mediainfo \
+	openssl \
 	php7 \
 	php7-cgi \
-	php7-fpm \
-	php7-json  \
-	php7-mbstring \
+	php7-curl \
 	php7-pear \
+	php7-zip \
+	procps \
+	python3 \
 	rtorrent \
 	screen \
-	tar \
+	sox \
 	unrar \
-	unzip \
-	wget \
 	zip && \
- apk add --no-cache \
-	--repository http://nl.alpinelinux.org/alpine/edge/community \
-	mediainfo && \
+ echo "**** install pip packages ****" && \
+ pip3 install --no-cache-dir -U \
+	cfscrape \
+	cloudscraper && \
 
-# install webui
- mkdir -p \
-	/usr/share/webapps/rutorrent \
-	/defaults/rutorrent-conf && \
+ echo "**** install rutorrent ****" && \
+ if [ -z ${RUTORRENT_RELEASE+x} ]; then \
+	RUTORRENT_RELEASE=$(curl -sX GET "https://api.github.com/repos/Novik/ruTorrent/releases/latest" \
+	| awk '/tag_name/{print $4;exit}' FS='[""]'); \
+ fi && \
  curl -o \
  /tmp/rutorrent.tar.gz -L \
-	"https://github.com/Novik/ruTorrent/archive/master.tar.gz" && \
-
+	"https://github.com/Novik/rutorrent/archive/${RUTORRENT_RELEASE}.tar.gz" && \
+ mkdir -p \
+	/app/rutorrent \
+	/defaults/rutorrent-conf && \
  tar xf \
  /tmp/rutorrent.tar.gz -C \
-	/usr/share/webapps/rutorrent --strip-components=1 && \
+	/app/rutorrent --strip-components=1 && \
+ mv /app/rutorrent/conf/* \
+	/defaults/rutorrent-conf/ && \
+ rm -rf \
+	/defaults/rutorrent-conf/users && \
  
 # mkdir /usr/share/webapps/rutorrent/plugins/theme/themes && \
  cd /usr/share/webapps/rutorrent/plugins/theme/themes && \
@@ -59,17 +72,16 @@ RUN \
  rm -rf \
 	/defaults/rutorrent-conf/users && \
 
-# patch snoopy.inc for rss fix
- cd /usr/share/webapps/rutorrent/php && \
+ echo "**** patch snoopy.inc for rss fix ****" && \
+ cd /app/rutorrent/php && \
  patch < /defaults/patches/snoopy.patch && \
-
-# cleanup
+ echo "**** cleanup ****" && \
+ apk del --purge \
+	build-dependencies && \
  rm -rf \
 	/etc/nginx/conf.d/default.conf \
-	/tmp/* && \
-
-# fix logrotate
- sed -i "s#/var/log/messages {}.*# #g" /etc/logrotate.conf
+	/root/.cache \
+	/tmp/*
 
 # add local files
 COPY root/ /
