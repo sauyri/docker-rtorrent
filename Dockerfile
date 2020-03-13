@@ -64,7 +64,7 @@ RUN \echo "**** install build packages ****" && \
 	/defaults/rutorrent-conf/users && \
  
 # mkdir /usr/share/webapps/rutorrent/plugins/theme/themes && \
- cd /usr/share/webapps/rutorrent/plugins/theme/themes && \
+ cd /app/rutorrent/plugins/theme/themes && \
  git clone git://github.com/phlooo/ruTorrent-MaterialDesign.git MaterialDesign && \
 
  mv /usr/share/webapps/rutorrent/conf/* \
