@@ -27,10 +27,12 @@ bind-tools \
 	libffi \
 	mediainfo \
 	openssl \
+	php-pfm \
 	php7 \
 	php7-cgi \
 	php7-curl \
 	php7-pear \
+	php7-pfm \
 	php7-zip \
 	procps \
 	python3 \
